@@ -50,25 +50,6 @@
       </tags>
   </entry>
   <entry>
-    <title>RPC and Threads</title>
-    <url>/2020/10/05/distributed-system-rpc/</url>
-    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
-<a id="more"></a>
-
-<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
-<p>堆内存和栈内存 分配？<br>lua?</p>
-<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
-<p>推荐书籍：<br>1、《effective go》</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>rpc和线程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title></title>
     <url>/2020/10/05/paging/</url>
     <content><![CDATA[<hr>
@@ -87,5 +68,24 @@
 <p>时钟替换算法</p>
 <h2 id="参考blog"><a href="#参考blog" class="headerlink" title="参考blog"></a>参考blog</h2><p><a href="https://blog.csdn.net/silent56_th/article/details/78462738">https://blog.csdn.net/silent56_th/article/details/78462738</a><br><a href="https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html">https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>RPC and Threads</title>
+    <url>/2020/10/05/distributed-system-rpc/</url>
+    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
+<a id="more"></a>
+
+<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
+<p>堆内存和栈内存 分配？<br>lua?</p>
+<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
+<p>推荐书籍：<br>1、《effective go》</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>rpc和线程</tag>
+      </tags>
   </entry>
 </search>
