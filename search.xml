@@ -69,12 +69,12 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>Data Structures and Algorithms for Big Database 阅读笔记</title>
     <url>/2020/10/05/paging/</url>
-    <content><![CDATA[<hr>
-<h2 id="Data-Structures-and-Algorithms-for-Big-Database-阅读笔记"><a href="#Data-Structures-and-Algorithms-for-Big-Database-阅读笔记" class="headerlink" title="Data Structures and Algorithms for Big Database 阅读笔记"></a>Data Structures and Algorithms for Big Database 阅读笔记</h2><p>paging algorithms</p>
-<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p>
+    <content><![CDATA[<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p>
 <p>cache-oblivious analysis：</p>
+<a id="more"></a>
+
 <h2 id="paging-algorithms"><a href="#paging-algorithms" class="headerlink" title="paging algorithms"></a>paging algorithms</h2><p>page fault,即中不存在所需数据而引入的错误，为了解决这个错误就需要从硬盘中读取数据到内存中。所以每个page fault都对应于一次硬盘读取，耗费大量时间。读到的数据需要覆盖内存中的某些现有数据，如何选择被替代的内存中的数据就是page replacement algorithm处理的问题。</p>
 <p><strong>1.1 LRU: least recently used</strong></p>
 <p>每次选择最不近使用的元素进行替换，算法根据数据的历史访问记录来进行淘汰数据，其核心思想是“如果数据最近被访问过，那么将来被访问的几率也更高”。<br>首先将请求序列分为b个区块，每个区块内最多有k个元素，并且使得b尽可能小。<br>那么LRU对于每个区块最多遇到k个page fault，从而整体而言最多bk个page fault。而对于最优算法，至少遇到b个page fault，因为每次跳跃区块的时候都会遇到一个前一区块从未遇过的第k+1个元素，从而引入page fault。<br>所以LRU的competitive ratio ≤k，其中k为cache size。</p>
@@ -87,5 +87,12 @@
 <p>时钟替换算法</p>
 <h2 id="参考blog"><a href="#参考blog" class="headerlink" title="参考blog"></a>参考blog</h2><p><a href="https://blog.csdn.net/silent56_th/article/details/78462738">https://blog.csdn.net/silent56_th/article/details/78462738</a><br><a href="https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html">https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html</a></p>
 ]]></content>
+      <categories>
+        <category>学习</category>
+        <category>LevelDB</category>
+      </categories>
+      <tags>
+        <tag>paging algorithms</tag>
+      </tags>
   </entry>
 </search>
