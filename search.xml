@@ -8,7 +8,13 @@
 
 <h2 id="分布式存储面临的问题"><a href="#分布式存储面临的问题" class="headerlink" title="分布式存储面临的问题"></a>分布式存储面临的问题</h2><p>1、component failures<br>持续的监控(monitoring)、错误侦测(error detection)、灾难冗余(fault tolerance,)、 自动恢复(automatic recovery)<br>2、huge files<br>需要考虑IO操作和block设计的大小<br>3、appending new data &amp;&amp; sequentially read （追加写和随机读）<br>因为具有追加写和随机读的特点，可以考虑块缓存设计、数据appending设计<br>4、flexibility<br>通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写</p>
 <h2 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h2><p>1、系统由很多廉价的组件构成，并且组件会经常失败<br>2、系统存储量大，既要支持GB级的大文件，也要支持小文件<br>3、既要支持大规模的流式读取，也要支持小规模的随机读取。 流式读取往往来自同一个客户端，读取一个文件的连续区域； 随机读取某个文件的某个区域，为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读<br>4、支持大规模顺序追加写，对于小规模的随机写，性能不咋滴<br>5、必须高效的支持多个用户同时写一个文件<br>6、高性能的稳定网络带宽远比低延迟重要</p>
-<h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>什么是GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。<br>什么是master节点:<br>什么是chunkserver:<br>什么是chunks：<br>什么是chunk handle: </p>
+<h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
+<h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：<br>Step1 客户端根据文件名和字节偏移生成chunk index<br>Step2 客户端把chunk index 和 文件名 发送给master<br>Step3 master返回对应的chunk handle 和 副本的位置<br>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)<br>Step5 客户端会向最近的一个副本请求数据</p>
+<p>写流程：</p>
+<p>master节点: 管理所有文件的系统元数据, 包括namespace、文件存储位置等<br>chunkserver: ChunkServer将块当作Linux文件存储在本地磁盘，通过chunk－handle和位区间来读取指定的数据<br>chunks：块、每个块由一个不变的、全局唯一的64位的chunk-handle标识<br>chunk handle: 块创建的时候由master分配</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：<br>1、减少客服端和主节点的直接交互<br>2、通过tcp长连接来减少网络IO<br>3、减少了存储在主节点上的元数据</p>
+<p>缺点：<br>1、当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题<br>2、批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</p>
+<h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：<br>1、文件和块的命名空间<br>2、文件到块的映射关系<br>3、块副本的存储位置<br>所有的元数据都保存在master的内存里，其中前两种通过系统日志的方式存储在磁盘里，以及在其他机器上存储副本。<br>master服务器不存储副本位置，每当master启动或者有新的chunkserver加入的时候，请求chunkserver获得</p>
 <h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p>
 <p>3、Bad replication Design</p>
 <p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p>
