@@ -6,7 +6,7 @@
   <link href="http://delia.github.io/child/atom.xml" rel="self"/>
   
   <link href="http://delia.github.io/child/"/>
-  <updated>2020-10-05T09:20:04.000Z</updated>
+  <updated>2020-10-08T14:15:13.000Z</updated>
   <id>http://delia.github.io/child/</id>
   
   <author>
@@ -17,37 +17,13 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Data Structures and Algorithms for Big Database 阅读笔记</title>
-    <link href="http://delia.github.io/child/2020/10/05/paging/"/>
-    <id>http://delia.github.io/child/2020/10/05/paging/</id>
-    <published>2020-10-05T05:18:24.000Z</published>
-    <updated>2020-10-05T09:20:04.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p><p>cache-oblivious analysis：</p><a id="more"></a><h2 id="paging-algorithms"><a href="#paging-algorithms" class="headerlink" title="paging algorithms"></a>paging algorithms</h2><p>page fault,即中不存在所需数据而引入的错误，为了解决这个错误就需要从硬盘中读取数据到内存中。所以每个page fault都对应于一次硬盘读取，耗费大量时间。读到的数据需要覆盖内存中的某些现有数据，如何选择被替代的内存中的数据就是page replacement algorithm处理的问题。</p><p><strong>1.1 LRU: least recently used</strong></p><p>每次选择最不近使用的元素进行替换，算法根据数据的历史访问记录来进行淘汰数据，其核心思想是“如果数据最近被访问过，那么将来被访问的几率也更高”。<br>首先将请求序列分为b个区块，每个区块内最多有k个元素，并且使得b尽可能小。<br>那么LRU对于每个区块最多遇到k个page fault，从而整体而言最多bk个page fault。而对于最优算法，至少遇到b个page fault，因为每次跳跃区块的时候都会遇到一个前一区块从未遇过的第k+1个元素，从而引入page fault。<br>所以LRU的competitive ratio ≤k，其中k为cache size。</p><p><strong>1.2 FIFO: first in,first out</strong></p><p><strong>1.3 LFU： least frequently used</strong></p><p><strong>1.4 random</strong></p><p><strong>1.5 LFD：longest forward distance</strong></p><p>也叫OPT optimal replacement algorithm<br>淘汰页面将是以后永不使用的，或许是在最长（未来）时间内不再被使用的页面<br>该算法保证了获得最低的缺页率，但是该算法无法实现。但是可以利用该算法去评价其他算法</p><p><strong>1.6  CPR：clock page Replacement Algorithm</strong></p><p>时钟替换算法</p><h2 id="参考blog"><a href="#参考blog" class="headerlink" title="参考blog"></a>参考blog</h2><p><a href="https://blog.csdn.net/silent56_th/article/details/78462738">https://blog.csdn.net/silent56_th/article/details/78462738</a><br><a href="https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html">https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html</a></p>]]></content>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;IO-and-cache-efficient-algorithm&quot;&gt;&lt;a href=&quot;#IO-and-cache-efficient-algorithm&quot; class=&quot;headerlink&quot; title=&quot;IO and cache-efficient algorithm&quot;&gt;&lt;/a&gt;IO and cache-efficient algorithm&lt;/h2&gt;&lt;p&gt;Disk Access Model：&lt;/p&gt;
-&lt;p&gt;cache-oblivious analysis：&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="学习" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="LevelDB" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/LevelDB/"/>
-    
-    
-    <category term="paging algorithms" scheme="http://delia.github.io/child/tags/paging-algorithms/"/>
-    
-  </entry>
-  
-  <entry>
     <title>GFS</title>
     <link href="http://delia.github.io/child/2020/10/05/distributed-system-GFS/"/>
     <id>http://delia.github.io/child/2020/10/05/distributed-system-GFS/</id>
     <published>2020-10-05T05:18:24.000Z</published>
-    <updated>2020-10-08T14:10:14.000Z</updated>
+    <updated>2020-10-08T14:15:13.000Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p><a id="more"></a><h2 id="分布式存储面临的问题"><a href="#分布式存储面临的问题" class="headerlink" title="分布式存储面临的问题"></a>分布式存储面临的问题</h2><p>1、component failures<br>持续的监控(monitoring)、错误侦测(error detection)、灾难冗余(fault tolerance,)、 自动恢复(automatic recovery)<br>2、huge files<br>需要考虑IO操作和block设计的大小<br>3、appending new data &amp;&amp; sequentially read （追加写和随机读）<br>因为具有追加写和随机读的特点，可以考虑块缓存设计、数据appending设计<br>4、flexibility<br>通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写</p><h2 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h2><p>1、系统由很多廉价的组件构成，并且组件会经常失败<br>2、系统存储量大，既要支持GB级的大文件，也要支持小文件<br>3、既要支持大规模的流式读取，也要支持小规模的随机读取。 流式读取往往来自同一个客户端，读取一个文件的连续区域； 随机读取某个文件的某个区域，为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读<br>4、支持大规模顺序追加写，对于小规模的随机写，性能不咋滴<br>5、必须高效的支持多个用户同时写一个文件<br>6、高性能的稳定网络带宽远比低延迟重要</p><h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p><h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：<br>Step1 客户端根据文件名和字节偏移生成chunk index<br>Step2 客户端把chunk index 和 文件名 发送给master<br>Step3 master返回对应的chunk handle 和 副本的位置<br>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)<br>Step5 客户端会向最近的一个副本请求数据</p><p>写流程：</p><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：<br>1、减少客服端和主节点的直接交互<br>2、通过tcp长连接来减少网络IO<br>3、减少了存储在主节点上的元数据</p><p>缺点：<br>1、当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题<br>2、批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</p><h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：<br>1、文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本<br>2、文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本<br>3、块副本的存储位置, master内存</p><p>一、内存数据结构<br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p><p>二、chunk位置<br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p><p>三、操作日志<br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p><h3 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h3><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b)</p><h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p><p>3、Bad replication Design</p><p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p><p>MASTER DATA：<br>表1：filename 到 chunk handles的映射  （会写入磁盘）<br>表2： chunk handle 到 chunk server的列表  （不必写入磁盘，master重启后会和server通信）<br>版本、 过期时间、</p><p>读数据：<br>1、文件名+偏移量  发送给master<br>2、master获取handle和servers列表给客户端<br>3、客户端和chunk sever通信，发送文件名和偏移量</p><p>写数据：<br>1、没有primary的情况<br>找出primary和sencondery<br>中心副本控制协议： Primary-secondary协议<br>分布式共识协议 </p><p>2、primary告诉所有的p 和 s 追加写<br>如果所有的s 都回复 “yes”, p 回复 client “success”<br>else p回复client “Fail”, 客户端重新发起追加写</p><p>最小化跨越交换机的处理：client只把数据发到离他最近的副本  然后副本再发送到其它副本  直到所有副本都拿到</p><p>Q：如果master认为priamry挂了怎么办？<br>租约  lease<br>master在指定一个primary的时候会建议一个租约，只在一定时间内，这个chunk是primary，租约到期后，primary就会停止执行master的请求</p><p>Q：SPILT BRAIN(脑裂) : 有两个primary处理请求并且不知道彼此错误的情况，通常是由网络引起的，net partition</p><p>Q：为什么指定一个新的primary是bad?<br>1、client会在短时间内缓存primary的信息<br>2、如果在修改primary的同时，有client的请求过来，会得到两个相互冲突的副本。</p><p>Q：如果有一个文件，但是没有副本 怎么处理？<br>master发现没有chunk和文件关联，就会创建一个新的chunk标识符，再指定一个primary和一些secondaries为这个chunk服务</p><p>Q: 如何将GFS升级成强一致性的系统<br>1、需要检测重复的能力<br>2、sencondary必须能工作，一旦如果磁盘损坏，它需要移除系统<br>3、两阶段提交<br>4、sencondary容易接收到过时的指令，所以可以为sencondary建立一个lease</p><p>GFS最大的问题是 它只用了一个master，需要记录所有的chunk条目，所以主机内存受限。<br>如果主机宕机的话，需要人工介入来切换master</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p><a id="more"></a><h2 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h2><p>1、系统由很多廉价的组件构成，并且组件会经常失败， 因此要注意持续的监控 、错误侦测、灾难冗余、 自动恢复<br>2、系统存储量大，支持GB级的大文件，因此需要考虑IO操作和block设计的大小<br>3、既要支持大规模的流式读取，也要支持小规模的随机读取。 为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读<br>4、支持大规模顺序追加写，对于小规模的随机写，性能不咋滴<br>5、必须高效的支持多个用户同时写一个文件，通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写<br>6、高性能的稳定网络带宽远比低延迟重要</p><h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p><h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：<br>Step1 客户端根据文件名和字节偏移生成chunk index<br>Step2 客户端把chunk index 和 文件名 发送给master<br>Step3 master返回对应的chunk handle 和 副本的位置<br>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)<br>Step5 客户端会向最近的一个副本请求数据</p><p>写流程：</p><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：<br>1、减少客服端和主节点的直接交互<br>2、通过tcp长连接来减少网络IO<br>3、减少了存储在主节点上的元数据</p><p>缺点：<br>1、当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题<br>2、批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</p><h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：<br>1、文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本<br>2、文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本<br>3、块副本的存储位置, master内存</p><p>一、内存数据结构<br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p><p>二、chunk位置<br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p><p>三、操作日志<br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p><h3 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h3><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b)</p><h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p><p>3、Bad replication Design</p><p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p><p>MASTER DATA：<br>表1：filename 到 chunk handles的映射  （会写入磁盘）<br>表2： chunk handle 到 chunk server的列表  （不必写入磁盘，master重启后会和server通信）<br>版本、 过期时间、</p><p>读数据：<br>1、文件名+偏移量  发送给master<br>2、master获取handle和servers列表给客户端<br>3、客户端和chunk sever通信，发送文件名和偏移量</p><p>写数据：<br>1、没有primary的情况<br>找出primary和sencondery<br>中心副本控制协议： Primary-secondary协议<br>分布式共识协议 </p><p>2、primary告诉所有的p 和 s 追加写<br>如果所有的s 都回复 “yes”, p 回复 client “success”<br>else p回复client “Fail”, 客户端重新发起追加写</p><p>最小化跨越交换机的处理：client只把数据发到离他最近的副本  然后副本再发送到其它副本  直到所有副本都拿到</p><p>Q：如果master认为priamry挂了怎么办？<br>租约  lease<br>master在指定一个primary的时候会建议一个租约，只在一定时间内，这个chunk是primary，租约到期后，primary就会停止执行master的请求</p><p>Q：SPILT BRAIN(脑裂) : 有两个primary处理请求并且不知道彼此错误的情况，通常是由网络引起的，net partition</p><p>Q：为什么指定一个新的primary是bad?<br>1、client会在短时间内缓存primary的信息<br>2、如果在修改primary的同时，有client的请求过来，会得到两个相互冲突的副本。</p><p>Q：如果有一个文件，但是没有副本 怎么处理？<br>master发现没有chunk和文件关联，就会创建一个新的chunk标识符，再指定一个primary和一些secondaries为这个chunk服务</p><p>Q: 如何将GFS升级成强一致性的系统<br>1、需要检测重复的能力<br>2、sencondary必须能工作，一旦如果磁盘损坏，它需要移除系统<br>3、两阶段提交<br>4、sencondary容易接收到过时的指令，所以可以为sencondary建立一个lease</p><p>GFS最大的问题是 它只用了一个master，需要记录所有的chunk条目，所以主机内存受限。<br>如果主机宕机的话，需要人工介入来切换master</p>]]></content>
     
     
     <summary type="html">&lt;h1 id=&quot;论文导读&quot;&gt;&lt;a href=&quot;#论文导读&quot; class=&quot;headerlink&quot; title=&quot;论文导读&quot;&gt;&lt;/a&gt;论文导读&lt;/h1&gt;&lt;p&gt;论文:《The Google File System》&lt;br&gt;关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance &lt;/p&gt;</summary>
@@ -106,6 +82,30 @@
     
     
     <category term="rpc和线程" scheme="http://delia.github.io/child/tags/rpc%E5%92%8C%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Data Structures and Algorithms for Big Database 阅读笔记</title>
+    <link href="http://delia.github.io/child/2020/10/05/paging/"/>
+    <id>http://delia.github.io/child/2020/10/05/paging/</id>
+    <published>2020-10-05T05:18:24.000Z</published>
+    <updated>2020-10-05T09:20:04.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p><p>cache-oblivious analysis：</p><a id="more"></a><h2 id="paging-algorithms"><a href="#paging-algorithms" class="headerlink" title="paging algorithms"></a>paging algorithms</h2><p>page fault,即中不存在所需数据而引入的错误，为了解决这个错误就需要从硬盘中读取数据到内存中。所以每个page fault都对应于一次硬盘读取，耗费大量时间。读到的数据需要覆盖内存中的某些现有数据，如何选择被替代的内存中的数据就是page replacement algorithm处理的问题。</p><p><strong>1.1 LRU: least recently used</strong></p><p>每次选择最不近使用的元素进行替换，算法根据数据的历史访问记录来进行淘汰数据，其核心思想是“如果数据最近被访问过，那么将来被访问的几率也更高”。<br>首先将请求序列分为b个区块，每个区块内最多有k个元素，并且使得b尽可能小。<br>那么LRU对于每个区块最多遇到k个page fault，从而整体而言最多bk个page fault。而对于最优算法，至少遇到b个page fault，因为每次跳跃区块的时候都会遇到一个前一区块从未遇过的第k+1个元素，从而引入page fault。<br>所以LRU的competitive ratio ≤k，其中k为cache size。</p><p><strong>1.2 FIFO: first in,first out</strong></p><p><strong>1.3 LFU： least frequently used</strong></p><p><strong>1.4 random</strong></p><p><strong>1.5 LFD：longest forward distance</strong></p><p>也叫OPT optimal replacement algorithm<br>淘汰页面将是以后永不使用的，或许是在最长（未来）时间内不再被使用的页面<br>该算法保证了获得最低的缺页率，但是该算法无法实现。但是可以利用该算法去评价其他算法</p><p><strong>1.6  CPR：clock page Replacement Algorithm</strong></p><p>时钟替换算法</p><h2 id="参考blog"><a href="#参考blog" class="headerlink" title="参考blog"></a>参考blog</h2><p><a href="https://blog.csdn.net/silent56_th/article/details/78462738">https://blog.csdn.net/silent56_th/article/details/78462738</a><br><a href="https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html">https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html</a></p>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;IO-and-cache-efficient-algorithm&quot;&gt;&lt;a href=&quot;#IO-and-cache-efficient-algorithm&quot; class=&quot;headerlink&quot; title=&quot;IO and cache-efficient algorithm&quot;&gt;&lt;/a&gt;IO and cache-efficient algorithm&lt;/h2&gt;&lt;p&gt;Disk Access Model：&lt;/p&gt;
+&lt;p&gt;cache-oblivious analysis：&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="LevelDB" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/LevelDB/"/>
+    
+    
+    <category term="paging algorithms" scheme="http://delia.github.io/child/tags/paging-algorithms/"/>
     
   </entry>
   
