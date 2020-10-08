@@ -28,7 +28,7 @@
 <meta property="og:description" content="论文导读论文:《The Google File System》关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-05T05:18:24.000Z">
-<meta property="article:modified_time" content="2020-10-07T09:04:30.000Z">
+<meta property="article:modified_time" content="2020-10-08T14:10:14.000Z">
 <meta property="article:author" content="丁大锤">
 <meta property="article:tag" content="Google文件系统">
 <meta name="twitter:card" content="summary">
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-07 17:04:30" itemprop="dateModified" datetime="2020-10-07T17:04:30+08:00">2020-10-07</time>
+                <time title="Modified: 2020-10-08 22:10:14" itemprop="dateModified" datetime="2020-10-08T22:10:14+08:00">2020-10-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -254,10 +254,13 @@
 <h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
 <h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：<br>Step1 客户端根据文件名和字节偏移生成chunk index<br>Step2 客户端把chunk index 和 文件名 发送给master<br>Step3 master返回对应的chunk handle 和 副本的位置<br>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)<br>Step5 客户端会向最近的一个副本请求数据</p>
 <p>写流程：</p>
-<p>master节点: 管理所有文件的系统元数据, 包括namespace、文件存储位置等<br>chunkserver: ChunkServer将块当作Linux文件存储在本地磁盘，通过chunk－handle和位区间来读取指定的数据<br>chunks：块、每个块由一个不变的、全局唯一的64位的chunk-handle标识<br>chunk handle: 块创建的时候由master分配</p>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：<br>1、减少客服端和主节点的直接交互<br>2、通过tcp长连接来减少网络IO<br>3、减少了存储在主节点上的元数据</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：<br>1、减少客服端和主节点的直接交互<br>2、通过tcp长连接来减少网络IO<br>3、减少了存储在主节点上的元数据</p>
 <p>缺点：<br>1、当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题<br>2、批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</p>
-<h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：<br>1、文件和块的命名空间<br>2、文件到块的映射关系<br>3、块副本的存储位置<br>所有的元数据都保存在master的内存里，其中前两种通过系统日志的方式存储在磁盘里，以及在其他机器上存储副本。<br>master服务器不存储副本位置，每当master启动或者有新的chunkserver加入的时候，请求chunkserver获得</p>
+<h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：<br>1、文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本<br>2、文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本<br>3、块副本的存储位置, master内存</p>
+<p>一、内存数据结构<br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p>
+<p>二、chunk位置<br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p>
+<p>三、操作日志<br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p>
+<h3 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h3><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b)</p>
 <h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p>
 <p>3、Bad replication Design</p>
 <p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p>
@@ -293,7 +296,10 @@
     <a href="/2020/10/05/distributed-system-primary-backup/" rel="prev" title="Primary-Backup Replication">
       <i class="fa fa-chevron-left"></i> Primary-Backup Replication
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/05/paging/" rel="next" title="Data Structures and Algorithms for Big Database 阅读笔记">
+      Data Structures and Algorithms for Big Database 阅读笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -352,7 +358,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">论文导读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">分布式存储面临的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">分布式存储的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">GFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#master"><span class="nav-number">1.3.1.</span> <span class="nav-text">master</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.4.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chunk-server"><span class="nav-number">1.4.1.</span> <span class="nav-text">chunk server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metadata"><span class="nav-number">1.4.2.</span> <span class="nav-text">Metadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">课程内容</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">论文导读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E9%9D%A2%E4%B8%B4%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">分布式存储面临的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">分布式存储的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">GFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#master"><span class="nav-number">1.3.1.</span> <span class="nav-text">master</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.4.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chunk-server"><span class="nav-number">1.4.1.</span> <span class="nav-text">chunk server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metadata"><span class="nav-number">1.4.2.</span> <span class="nav-text">Metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consistency-Model"><span class="nav-number">1.4.3.</span> <span class="nav-text">Consistency Model</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">课程内容</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
