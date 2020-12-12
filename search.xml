@@ -73,6 +73,23 @@
       </tags>
   </entry>
   <entry>
+    <title>Primary-Backup Replication</title>
+    <url>/2020/10/05/distributed-system-primary-backup/</url>
+    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
+<a id="more"></a>
+
+
+<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>主从备份</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>GFS</title>
     <url>/2020/10/05/distributed-system-GFS/</url>
     <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
@@ -142,42 +159,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Primary-Backup Replication</title>
-    <url>/2020/10/05/distributed-system-primary-backup/</url>
-    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
-<a id="more"></a>
-
-
-<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>主从备份</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RPC and Threads</title>
-    <url>/2020/10/05/distributed-system-rpc/</url>
-    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
-<a id="more"></a>
-
-<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
-<p>堆内存和栈内存 分配？<br>lua?</p>
-<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
-<p>推荐书籍：<br>1、《effective go》</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>rpc和线程</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Data Structures and Algorithms for Big Database 阅读笔记</title>
     <url>/2020/10/05/paging/</url>
     <content><![CDATA[<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p>
@@ -202,6 +183,25 @@
       </categories>
       <tags>
         <tag>paging algorithms</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPC and Threads</title>
+    <url>/2020/10/05/distributed-system-rpc/</url>
+    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
+<a id="more"></a>
+
+<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
+<p>堆内存和栈内存 分配？<br>lua?</p>
+<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
+<p>推荐书籍：<br>1、《effective go》</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>rpc和线程</tag>
       </tags>
   </entry>
 </search>
