@@ -27,13 +27,15 @@
 <meta property="og:site_name" content="Delia&#39;s Blog">
 <meta property="og:description" content="airflow简介官方文档 1.1 干嘛的分布式任务调度系统  组织任务编排 管理任务依赖 调度任务工作流 监视任务执行状态">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://airflow.apache.org/docs/apache-airflow/stable/_images/graphviz-91fd3ca4f3dc01a69b3f84fbcd6b5c7975945ba4.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190916182738947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1ODQzNA==,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019091618314065.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1ODQzNA==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2020-12-12T09:14:07.000Z">
-<meta property="article:modified_time" content="2020-12-12T10:43:25.000Z">
+<meta property="article:modified_time" content="2020-12-12T10:54:16.000Z">
 <meta property="article:author" content="丁大锤">
 <meta property="article:tag" content="分布式调度">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70">
+<meta name="twitter:image" content="https://airflow.apache.org/docs/apache-airflow/stable/_images/graphviz-91fd3ca4f3dc01a69b3f84fbcd6b5c7975945ba4.png">
 
 <link rel="canonical" href="http://delia.github.io/child/2020/12/12/airflow%E7%AE%80%E4%BB%8B/">
 
@@ -208,7 +210,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-12-12 17:14:07 / Modified: 18:43:25" itemprop="dateCreated datePublished" datetime="2020-12-12T17:14:07+08:00">2020-12-12</time>
+              <time title="Created: 2020-12-12 17:14:07 / Modified: 18:54:16" itemprop="dateCreated datePublished" datetime="2020-12-12T17:14:07+08:00">2020-12-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -300,7 +302,7 @@
 <td align="left"></td>
 </tr>
 </tbody></table>
-<p><img src="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70" alt="架构图" title="架构图"></p>
+<p><img src="https://airflow.apache.org/docs/apache-airflow/stable/_images/graphviz-91fd3ca4f3dc01a69b3f84fbcd6b5c7975945ba4.png" alt="架构图" title="架构图"></p>
 <p>各种组件之间的通信</p>
 <ol>
 <li>Web server –&gt; Workers ： 获取任务执行日志。</li>
@@ -323,20 +325,15 @@
 <li>DaskExecutor：使用Dask进行分布式任务调度</li>
 <li>KubernetesExecutor: 1.10.0新增, 创建临时POD执行每次任务<br>其中常用的是CeleryExecutor 和 KubernetesExecutor。 这里介绍下LocalExecutor 和 CeleryExecutor 分别代表单机和分布式模式。</li>
 </ul>
-<p>分布式模式</p>
+<p>分布式模式<br><img src="https://img-blog.csdnimg.cn/20190916182738947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1ODQzNA==,size_16,color_FFFFFF,t_70" alt="单机模式"></p>
 <ol>
-<li><p>Schedual读取配置文件 将Job信息发给RabbitMQ， 并在数据库里注册Job信息</p>
-</li>
-<li><p>RabbitMQ里有很多channel， schedual根据Job信息 发到对应的channel</p>
-</li>
-<li><p>Executor会被配置为 Celery Executor（在 airflow.cfg 中配置），并且指向 RabbitMQ Broker， 消费RabbitMQ对应的channel。</p>
-</li>
-<li><p>Worker 被安装在不同的节点上，它们从 RabbitMQ Broker 中读取任务，并执行，最终将结果写入数据库。</p>
-</li>
-<li><p>Web读取MySQL里面的Job信息，展示Job的执行结果</p>
-</li>
+<li>Schedual读取配置文件 将Job信息发给RabbitMQ， 并在数据库里注册Job信息</li>
+<li>RabbitMQ里有很多channel， schedual根据Job信息 发到对应的channel</li>
+<li>Executor会被配置为 Celery Executor（在 airflow.cfg 中配置），并且指向 RabbitMQ Broker， 消费RabbitMQ对应的channel。  </li>
+<li>Worker 被安装在不同的节点上，它们从 RabbitMQ Broker 中读取任务，并执行，最终将结果写入数据库。</li>
+<li>Web读取MySQL里面的Job信息，展示Job的执行结果</li>
 </ol>
-<p>单机模式</p>
+<p>单机模式<br><img src="https://img-blog.csdnimg.cn/2019091618314065.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zOTY1ODQzNA==,size_16,color_FFFFFF,t_70" alt="单机模式"></p>
 <h2 id="1-3-核心概念"><a href="#1-3-核心概念" class="headerlink" title="1.3  核心概念"></a>1.3  核心概念</h2><p><strong>1.3.1 DAG图</strong> </p>
 <p>即有向无环图(Directed Acyclic Graph)，将所有需要运行的tasks按照依赖关系组织起来, 描述的是一个工作流的过程。<br>DAG 不关心里面的任务做了什么事情，而是关心  </p>
 <ul>
@@ -376,8 +373,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/10/05/distributed-system-rpc/" rel="prev" title="RPC and Threads">
-      <i class="fa fa-chevron-left"></i> RPC and Threads
+    <a href="/2020/10/05/distributed-system-GFS/" rel="prev" title="GFS">
+      <i class="fa fa-chevron-left"></i> GFS
     </a></div>
       <div class="post-nav-item"></div>
     </div>
