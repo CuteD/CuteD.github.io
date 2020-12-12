@@ -209,10 +209,34 @@
 <li>文件 –&gt; 死锁 –&gt; 防止同名文件</li>
 <li>读写锁 惰性分配 防止死锁<h2 id="副本选择"><a href="#副本选择" class="headerlink" title="副本选择"></a>副本选择</h2>副本选址有两个原则：</li>
 <li>最大限度的保证数据的可靠和可用</li>
-<li>最大限度的利用网络带宽<br>因此机器之间会复制，机架之间也会复制。<h2 id="重备份"><a href="#重备份" class="headerlink" title="重备份"></a>重备份</h2>有三个原因需要创建chunk的副本：chunk的创建，chunk的重新复制，chunk的重新均衡。<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><h2 id="过期副本删除"><a href="#过期副本删除" class="headerlink" title="过期副本删除"></a>过期副本删除</h2></li>
+<li>最大限度的利用网络带宽<br>因此机器之间会复制，机架之间也会复制。<h2 id="重备份"><a href="#重备份" class="headerlink" title="重备份"></a>重备份</h2>有三个原因需要创建chunk的副本：chunk的创建，chunk的重新复制，chunk的重新均衡。  </li>
 </ul>
-<p>#容错和诊断</p>
-<h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>高可用性靠两点来保证: 备份与恢复<br><strong>1. 快速恢复</strong><br>reconnect and  restart<br><strong>2. chunk 备份</strong><br>不同机架上都有chunkserver的副本<br>master通过checksum来删除损坏的副本<br>后续可以讨论避免冗余存储<br><strong>3. master 备份</strong><br>master上的operation log和checkpoints是备份的</p>
+<p><strong>选址考虑</strong></p>
+<ul>
+<li>选择磁盘使用率较低的</li>
+<li>确保不会有太多”较新”的副本</li>
+<li>跨越机架  </li>
+</ul>
+<p><strong>重备份顺序</strong></p>
+<ul>
+<li>与副本指定数量差距, 差距越大越先备份</li>
+<li>越活跃的文件越先备份</li>
+<li>阻塞用户的文件越先备份  </li>
+</ul>
+<p><strong>副本均衡</strong><br>master会定期进行均衡副本<br>低磁盘使用率的chunkserver上的chunk会优先选择</p>
+<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><ul>
+<li>惰性回收<br>不会立即删除, 而是重命名成一个隐藏文件， 过了三天再删除</li>
+<li>定期扫描<br>master会对chunk的namesapce进行定期扫描, 识别chunk孤点进行删除</li>
+</ul>
+<p><strong>优点</strong>  </p>
+<ol>
+<li>定期扫描，可以清除未知副本</li>
+<li>是在master负载较轻的时候进行批处理的，比如对namespace的扫描、chunkserver的握手,</li>
+<li>惰性回收可以避免误操作  </li>
+</ol>
+<p><strong>缺点</strong><br>存储资源紧张的话  影响负载均衡</p>
+<h2 id="过期副本删除"><a href="#过期副本删除" class="headerlink" title="过期副本删除"></a>过期副本删除</h2><p>对于每一个chunk，master保持一个chunk的版本号码来区分最新的和过期的副本。</p>
+<h1 id="容错和诊断"><a href="#容错和诊断" class="headerlink" title="容错和诊断"></a>容错和诊断</h1><h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>高可用性靠两点来保证: 备份与恢复<br><strong>1. 快速恢复</strong><br>reconnect and  restart<br><strong>2. chunk 备份</strong><br>不同机架上都有chunkserver的副本<br>master通过checksum来删除损坏的副本<br>后续可以讨论避免冗余存储<br><strong>3. master 备份</strong><br>master上的operation log和checkpoints是备份的</p>
 <h2 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h2><p>每一个chunkserver上必须独立的效验自己的副本的完整性，通过checksum来检查<br>checksum存储在内存和磁盘上<br>读数据时会校验，写数据时更新checksum, chunkserver空闲时，会检查不常用的副本</p>
 <ul>
 <li>chunckserver返回数据前，会做checksum, 如果checksum不正确， 返回错误;</li>
