@@ -18,9 +18,62 @@
 <li>优雅性  使用jinja模板引擎使 脚本参数化</li>
 <li>可伸缩性  模块化 使用消息队列来协调worker</li>
 </ul>
-<h2 id="1-2-整体架构"><a href="#1-2-整体架构" class="headerlink" title="1.2 整体架构"></a>1.2 整体架构</h2><p>1.2.1 整体介绍<br>在一个可扩展的生产环境中，Airflow通常含有以下组件：<br>|组件|名称|职责|选型|<br>|:-|:-:|:-:|-:|<br>|一个元数据库 | Database| 存储任务、DAGs 变量 连接等信息| MySQL 或 Postgres|<br>|一组Airflow工作节点 |Workers| 接收任务并执行任务 | |<br>|一个Airflow调度器 | Scheduler | 周期性地轮询任务的调度计划，以确定是否触发任务执行,根据dags生成任务，并提交到消息中间件队列中| |<br>| 一个调节器 | Celery | 队列机制。Celery由Broker（代理）和Result backend（结果后端）两个组件组成。Broker负责存储执行的命令。Result backend存储完成执行命令的状态信息。|Redis或RabbitMQ |<br>|一个Airflow Web服务器| WebServer | 提供web端服务，以及会定时生成子进程去扫描对应的目录下的dags，并更新数据库| |    </p>
-<p>![架构图] (<a href="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70">https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70</a>)</p>
-<p>各种组件之间的通信<br>[1] Web server –&gt; Workers ： 获取任务执行日志。<br>[2] Web server –&gt; DAG files ： 展示DAG结构。<br>[3] Web server –&gt; Database ：获取任务状态。<br>[4] Workers –&gt; DAG files ：展示DAG结构和执行任务。<br>[5] Workers –&gt; Database ： 获取和存储连接配置信息、变量XCOM。<br>[6] Workers –&gt; Celery’s result backend ： 存储任务执行信息。<br>[7] Workers –&gt; Celery’s broker ：存储执行的命令。<br>[8] Scheduler –&gt; Database ： 存储DAG运行信息和相关的任务。<br>[9] Scheduler –&gt; DAG files ： 展示DAG的结构和执行任务。<br>[10] Scheduler –&gt; Celery’s result backend ： 获取已经执行完的任务信息。<br>[11] Scheduler –&gt; Celery’s broker ： 把执行的命令发送给Celery’s broker。</p>
+<h2 id="1-2-整体架构"><a href="#1-2-整体架构" class="headerlink" title="1.2 整体架构"></a>1.2 整体架构</h2><p>1.2.1 整体介绍<br>在一个可扩展的生产环境中，Airflow通常含有以下组件：</p>
+<table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="center">名称</th>
+<th align="center">职责</th>
+<th align="left">职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">一个元数据库</td>
+<td align="center">Database</td>
+<td align="center">存储任务、DAGs 变量 连接等信息</td>
+<td align="left">MySQL 或 Postgres</td>
+</tr>
+<tr>
+<td align="left">一组Airflow工作节点</td>
+<td align="center">Workers</td>
+<td align="center">接收任务并执行任务</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">一个Airflow调度器</td>
+<td align="center">Scheduler</td>
+<td align="center">周期性地轮询任务的调度计划，以确定是否触发任务执行,根据dags生成任务，并提交到消息中间件队列中</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">一个调节器</td>
+<td align="center">Celery</td>
+<td align="center">队列机制。Celery由Broker（代理）和Result backend（结果后端）两个组件组成。Broker负责存储执行的命令。Result backend存储完成执行命令的状态信息。</td>
+<td align="left">Redis或RabbitMQ</td>
+</tr>
+<tr>
+<td align="left">一个Airflow Web服务器</td>
+<td align="center">WebServer</td>
+<td align="center">提供web端服务，以及会定时生成子进程去扫描对应的目录下的dags，并更新数据库</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p><img src="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70" alt="架构图" title="架构图"></p>
+<p>各种组件之间的通信</p>
+<ol>
+<li>Web server –&gt; Workers ： 获取任务执行日志。</li>
+<li>Web server –&gt; DAG files ： 展示DAG结构。</li>
+<li>Web server –&gt; Database ：获取任务状态。</li>
+<li>Workers –&gt; DAG files ：展示DAG结构和执行任务。</li>
+<li>Workers –&gt; Database ： 获取和存储连接配置信息、变量XCOM。</li>
+<li>Workers –&gt; Celery’s result backend ： 存储任务执行信息。</li>
+<li>Workers –&gt; Celery’s broker ：存储执行的命令。</li>
+<li>Scheduler –&gt; Database ： 存储DAG运行信息和相关的任务。</li>
+<li>Scheduler –&gt; DAG files ： 展示DAG的结构和执行任务。</li>
+<li>Scheduler –&gt; Celery’s result backend ： 获取已经执行完的任务信息。</li>
+<li>Scheduler –&gt; Celery’s broker ： 把执行的命令发送给Celery’s broker。</li>
+</ol>
 <p>1.2.2  单机模式和分布式模式的区别<br>Worker的具体实现由配置文件中的executor来指定，airflow支持多种Executor:</p>
 <ul>
 <li>SequentialExecutor: 单进程顺序执行，一般只用来测试</li>
@@ -70,23 +123,6 @@
       </categories>
       <tags>
         <tag>分布式调度</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Primary-Backup Replication</title>
-    <url>/2020/10/05/distributed-system-primary-backup/</url>
-    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
-<a id="more"></a>
-
-
-<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>主从备份</tag>
       </tags>
   </entry>
   <entry>
@@ -159,6 +195,42 @@
       </tags>
   </entry>
   <entry>
+    <title>Primary-Backup Replication</title>
+    <url>/2020/10/05/distributed-system-primary-backup/</url>
+    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
+<a id="more"></a>
+
+
+<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>主从备份</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPC and Threads</title>
+    <url>/2020/10/05/distributed-system-rpc/</url>
+    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
+<a id="more"></a>
+
+<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
+<p>堆内存和栈内存 分配？<br>lua?</p>
+<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
+<p>推荐书籍：<br>1、《effective go》</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>rpc和线程</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Data Structures and Algorithms for Big Database 阅读笔记</title>
     <url>/2020/10/05/paging/</url>
     <content><![CDATA[<h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p>
@@ -183,25 +255,6 @@
       </categories>
       <tags>
         <tag>paging algorithms</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RPC and Threads</title>
-    <url>/2020/10/05/distributed-system-rpc/</url>
-    <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
-<a id="more"></a>
-
-<p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p>
-<p>堆内存和栈内存 分配？<br>lua?</p>
-<p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p>
-<p>推荐书籍：<br>1、《effective go》</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>rpc和线程</tag>
       </tags>
   </entry>
 </search>
