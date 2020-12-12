@@ -6,7 +6,7 @@
   <link href="http://delia.github.io/child/atom.xml" rel="self"/>
   
   <link href="http://delia.github.io/child/"/>
-  <updated>2020-12-12T10:54:16.000Z</updated>
+  <updated>2020-12-12T11:02:55.000Z</updated>
   <id>http://delia.github.io/child/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>airflow部署</title>
+    <link href="http://delia.github.io/child/2020/12/12/airflow%E9%83%A8%E7%BD%B2/"/>
+    <id>http://delia.github.io/child/2020/12/12/airflow%E9%83%A8%E7%BD%B2/</id>
+    <published>2020-12-12T10:55:24.000Z</published>
+    <updated>2020-12-12T11:02:55.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="搭建airflow"><a href="#搭建airflow" class="headerlink" title="搭建airflow"></a>搭建airflow</h1><p><a href="https://airflow.apache.org/docs/stable/installation.html">官方文档</a></p><a id="more"></a><h2 id="准备数据库"><a href="#准备数据库" class="headerlink" title="准备数据库"></a>准备数据库</h2><p>CREATE DATABASE airflow_hmc;<br>alter user  XXX with password ‘XXXX’;<br>GRANT ALL PRIVILEGES ON DATABASE airflow TO airflow;  </p><h2 id="设置-airflow-项目路径"><a href="#设置-airflow-项目路径" class="headerlink" title="设置 airflow 项目路径"></a>设置 airflow 项目路径</h2><p>vim ~/.bash_profile<br>export AIRFLOW_HOME=/home/xiaoju/airflow</p><h2 id="安装airflow"><a href="#安装airflow" class="headerlink" title="安装airflow"></a>安装airflow</h2><p>pip install apache-airflow<br>服务器安装巨慢  可以用公司的源<br>pip install xxx –trusted-host </p><h2 id="配置自己的数据库"><a href="#配置自己的数据库" class="headerlink" title="配置自己的数据库"></a>配置自己的数据库</h2><p>更改~/airflow/airflow.cfg<br>executor = LocalExecutor<br>sql_alchemy_conn = postgresql+psycopg2://user:pass@hostadress:port/database<br>最后再重新初始化db</p><p>airflow initdb<br>airflow resetdb</p><p>然后自动生成数据库结构， 包括job信息、task信息、dag信息。</p><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>airflow webserver -p 8080<br>守护进程启动加 -D</p><h2 id="开始demo"><a href="#开始demo" class="headerlink" title="开始demo"></a>开始demo</h2><p><a href="https://blog.csdn.net/SunnyYoona/article/details/76615699">参考</a></p><p>编写hello word<br>测试代码正确性: python ~/opt/airflow/dags/hello_world.py<br>展示task任务： airflow list_tasks example_hello_world_dag<br>测试单task正确性 ：airflow test example_hello_world_dag date_task 20170803<br>运行DAG： airflow scheduler就可以在界面上看到自己的任务了</p><h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><p>删除默认示例<br>Edit airflow.cfg and set load_examples = False<br>airflow resetdb<br><a href="https://cloud.tencent.com/developer/article/1531063">修改时区</a></p><h1 id="搭建分布式"><a href="#搭建分布式" class="headerlink" title="搭建分布式"></a>搭建分布式</h1><h2 id="搭建redis"><a href="#搭建redis" class="headerlink" title="搭建redis"></a>搭建redis</h2><ul><li>下载redis包 wget <a href="http://download.redis.io/releases/redis-3.0.7.tar.gz">http://download.redis.io/releases/redis-3.0.7.tar.gz</a> 放在/usr/local/目录下</li><li>编译  make   make install PREFIX=/usr/local/redis</li><li>启动 /usr/local/redis/bin目录下   ./redis-server &amp;</li><li>redis启动 /usr/local/redis/bin$ ./redis-cli -p  6379<h2 id="安装celery"><a href="#安装celery" class="headerlink" title="安装celery"></a>安装celery</h2>pip install celery</li></ul><h2 id="配置redis"><a href="#配置redis" class="headerlink" title="配置redis"></a>配置redis</h2><p>修改broker_url, result_backend<br>配置主节点位置 cluster_addres</p><h2 id="worker-节点部署"><a href="#worker-节点部署" class="headerlink" title="worker 节点部署"></a>worker 节点部署</h2><p>部署了一主两从，在master上启动webserver 和 scheduler<br>在slave上启动 worker</p><h2 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h2><p>airflow只提供命令同步， 不负责文件同步, 使用rsync进行多节点文件同步</p>]]></content>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;搭建airflow&quot;&gt;&lt;a href=&quot;#搭建airflow&quot; class=&quot;headerlink&quot; title=&quot;搭建airflow&quot;&gt;&lt;/a&gt;搭建airflow&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://airflow.apache.org/docs/stable/installation.html&quot;&gt;官方文档&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="环境部署" scheme="http://delia.github.io/child/categories/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/"/>
+    
+    <category term="airflow" scheme="http://delia.github.io/child/categories/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/airflow/"/>
+    
+    
+    <category term="环境部署" scheme="http://delia.github.io/child/tags/%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/"/>
+    
+  </entry>
   
   <entry>
     <title>airflow简介</title>
@@ -42,6 +65,29 @@
     
     
     <category term="分布式调度" scheme="http://delia.github.io/child/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RPC and Threads</title>
+    <link href="http://delia.github.io/child/2020/10/05/distributed-system-rpc/"/>
+    <id>http://delia.github.io/child/2020/10/05/distributed-system-rpc/</id>
+    <published>2020-10-05T05:18:24.000Z</published>
+    <updated>2020-10-05T05:18:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p><a id="more"></a><p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p><p>堆内存和栈内存 分配？<br>lua?</p><p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p><p>推荐书籍：<br>1、《effective go》</p>]]></content>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;多线程&quot;&gt;&lt;a href=&quot;#多线程&quot; class=&quot;headerlink&quot; title=&quot;多线程&quot;&gt;&lt;/a&gt;多线程&lt;/h2&gt;&lt;p&gt;多线程协同 垃圾回收&lt;br&gt;1、多线程&lt;br&gt;goroutine&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="学习" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="分布式系统" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="rpc和线程" scheme="http://delia.github.io/child/tags/rpc%E5%92%8C%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
@@ -88,29 +134,6 @@
     
     
     <category term="主从备份" scheme="http://delia.github.io/child/tags/%E4%B8%BB%E4%BB%8E%E5%A4%87%E4%BB%BD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RPC and Threads</title>
-    <link href="http://delia.github.io/child/2020/10/05/distributed-system-rpc/"/>
-    <id>http://delia.github.io/child/2020/10/05/distributed-system-rpc/</id>
-    <published>2020-10-05T05:18:24.000Z</published>
-    <updated>2020-10-05T05:18:24.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p><a id="more"></a><p>event-driven  和  多线程的区别？<br>当并发量过大时 线程切换的开销较大；一般高性能服务器都是 多线程和事件驱动结合来做</p><p>堆内存和栈内存 分配？<br>lua?</p><p>多线程的挑战：<br>1、共享内存<br>race、 condition 、 临界区问题锁<br>2、coordination<br>channel : 将数据从一个线程发送到另一个线程<br>condition variables ： 确定哪些线程运行<br>wait group:<br>3、死锁</p><p>推荐书籍：<br>1、《effective go》</p>]]></content>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;多线程&quot;&gt;&lt;a href=&quot;#多线程&quot; class=&quot;headerlink&quot; title=&quot;多线程&quot;&gt;&lt;/a&gt;多线程&lt;/h2&gt;&lt;p&gt;多线程协同 垃圾回收&lt;br&gt;1、多线程&lt;br&gt;goroutine&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="学习" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="分布式系统" scheme="http://delia.github.io/child/categories/%E5%AD%A6%E4%B9%A0/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="rpc和线程" scheme="http://delia.github.io/child/tags/rpc%E5%92%8C%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
