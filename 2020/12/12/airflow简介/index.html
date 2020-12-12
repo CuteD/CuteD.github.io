@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"delia.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="IO and cache-efficient algorithmDisk Access Model： cache-oblivious analysis：">
+  <meta name="description" content="airflow简介1.1 干嘛的分布式任务调度系统来组织任务编排，  管理任务依赖 调度任务工作流 监视任务执行状态。  关键字  动态性   可扩展性   可以自动以操作器、执行器等 优雅性  使用jinja模板引擎使 脚本参数化 可伸缩性  模块化 使用消息队列来协调worker  1.2 整体架构1.2.1 整体介绍在一个可扩展的生产环境中，Airflow通常含有以下组件：|组件|名称|职责">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Data Structures and Algorithms for Big Database 阅读笔记">
-<meta property="og:url" content="http://delia.github.io/child/2020/10/05/paging/index.html">
+<meta property="og:title" content="airflow简介">
+<meta property="og:url" content="http://delia.github.io/child/2020/12/12/airflow%E7%AE%80%E4%BB%8B/index.html">
 <meta property="og:site_name" content="Delia&#39;s Blog">
-<meta property="og:description" content="IO and cache-efficient algorithmDisk Access Model： cache-oblivious analysis：">
+<meta property="og:description" content="airflow简介1.1 干嘛的分布式任务调度系统来组织任务编排，  管理任务依赖 调度任务工作流 监视任务执行状态。  关键字  动态性   可扩展性   可以自动以操作器、执行器等 优雅性  使用jinja模板引擎使 脚本参数化 可伸缩性  模块化 使用消息队列来协调worker  1.2 整体架构1.2.1 整体介绍在一个可扩展的生产环境中，Airflow通常含有以下组件：|组件|名称|职责">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-10-05T05:18:24.000Z">
-<meta property="article:modified_time" content="2020-10-05T09:20:04.000Z">
+<meta property="article:published_time" content="2020-12-12T09:14:07.000Z">
+<meta property="article:modified_time" content="2020-12-12T09:53:18.000Z">
 <meta property="article:author" content="丁大锤">
-<meta property="article:tag" content="paging algorithms">
+<meta property="article:tag" content="分布式调度">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://delia.github.io/child/2020/10/05/paging/">
+<link rel="canonical" href="http://delia.github.io/child/2020/12/12/airflow%E7%AE%80%E4%BB%8B/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Data Structures and Algorithms for Big Database 阅读笔记 | Delia's Blog</title>
+  <title>airflow简介 | Delia's Blog</title>
   
 
 
@@ -182,7 +182,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://delia.github.io/child/2020/10/05/paging/">
+    <link itemprop="mainEntityOfPage" href="http://delia.github.io/child/2020/12/12/airflow%E7%AE%80%E4%BB%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="http://hiphotos.baidu.com/feed/pic/item/7e3e6709c93d70cff7d4794af5dcd100baa12b4f.jpg">
@@ -195,7 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Data Structures and Algorithms for Big Database 阅读笔记
+          airflow简介
         </h1>
 
         <div class="post-meta">
@@ -206,7 +206,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-05 13:18:24 / Modified: 17:20:04" itemprop="dateCreated datePublished" datetime="2020-10-05T13:18:24+08:00">2020-10-05</time>
+              <time title="Created: 2020-12-12 17:14:07 / Modified: 17:53:18" itemprop="dateCreated datePublished" datetime="2020-12-12T17:14:07+08:00">2020-12-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,7 +218,7 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0/LevelDB/" itemprop="url" rel="index"><span itemprop="name">LevelDB</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0/%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/" itemprop="url" rel="index"><span itemprop="name">分布式调度</span></a>
                 </span>
             </span>
 
@@ -240,21 +240,64 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="IO-and-cache-efficient-algorithm"><a href="#IO-and-cache-efficient-algorithm" class="headerlink" title="IO and cache-efficient algorithm"></a>IO and cache-efficient algorithm</h2><p>Disk Access Model：</p>
-<p>cache-oblivious analysis：</p>
-<a id="more"></a>
-
-<h2 id="paging-algorithms"><a href="#paging-algorithms" class="headerlink" title="paging algorithms"></a>paging algorithms</h2><p>page fault,即中不存在所需数据而引入的错误，为了解决这个错误就需要从硬盘中读取数据到内存中。所以每个page fault都对应于一次硬盘读取，耗费大量时间。读到的数据需要覆盖内存中的某些现有数据，如何选择被替代的内存中的数据就是page replacement algorithm处理的问题。</p>
-<p><strong>1.1 LRU: least recently used</strong></p>
-<p>每次选择最不近使用的元素进行替换，算法根据数据的历史访问记录来进行淘汰数据，其核心思想是“如果数据最近被访问过，那么将来被访问的几率也更高”。<br>首先将请求序列分为b个区块，每个区块内最多有k个元素，并且使得b尽可能小。<br>那么LRU对于每个区块最多遇到k个page fault，从而整体而言最多bk个page fault。而对于最优算法，至少遇到b个page fault，因为每次跳跃区块的时候都会遇到一个前一区块从未遇过的第k+1个元素，从而引入page fault。<br>所以LRU的competitive ratio ≤k，其中k为cache size。</p>
-<p><strong>1.2 FIFO: first in,first out</strong></p>
-<p><strong>1.3 LFU： least frequently used</strong></p>
-<p><strong>1.4 random</strong></p>
-<p><strong>1.5 LFD：longest forward distance</strong></p>
-<p>也叫OPT optimal replacement algorithm<br>淘汰页面将是以后永不使用的，或许是在最长（未来）时间内不再被使用的页面<br>该算法保证了获得最低的缺页率，但是该算法无法实现。但是可以利用该算法去评价其他算法</p>
-<p><strong>1.6  CPR：clock page Replacement Algorithm</strong></p>
-<p>时钟替换算法</p>
-<h2 id="参考blog"><a href="#参考blog" class="headerlink" title="参考blog"></a>参考blog</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/silent56_th/article/details/78462738">https://blog.csdn.net/silent56_th/article/details/78462738</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html">https://www.cnblogs.com/CareySon/archive/2012/04/25/2470063.html</a></p>
+        <h1 id="airflow简介"><a href="#airflow简介" class="headerlink" title="airflow简介"></a>airflow简介</h1><h2 id="1-1-干嘛的"><a href="#1-1-干嘛的" class="headerlink" title="1.1 干嘛的"></a>1.1 干嘛的</h2><p>分布式任务调度系统来组织任务编排，</p>
+<ul>
+<li>管理任务依赖</li>
+<li>调度任务工作流</li>
+<li>监视任务执行状态。</li>
+</ul>
+<p><strong>关键字</strong></p>
+<ul>
+<li>动态性  </li>
+<li>可扩展性   可以自动以操作器、执行器等</li>
+<li>优雅性  使用jinja模板引擎使 脚本参数化</li>
+<li>可伸缩性  模块化 使用消息队列来协调worker</li>
+</ul>
+<h2 id="1-2-整体架构"><a href="#1-2-整体架构" class="headerlink" title="1.2 整体架构"></a>1.2 整体架构</h2><p>1.2.1 整体介绍<br>在一个可扩展的生产环境中，Airflow通常含有以下组件：<br>|组件|名称|职责|选型|<br>|:-|:-:|:-:|-:|<br>|一个元数据库 | Database| 存储任务、DAGs 变量 连接等信息| MySQL 或 Postgres|<br>|一组Airflow工作节点 |Workers| 接收任务并执行任务 | |<br>|一个Airflow调度器 | Scheduler | 周期性地轮询任务的调度计划，以确定是否触发任务执行,根据dags生成任务，并提交到消息中间件队列中| |<br>| 一个调节器 | Celery | 队列机制。Celery由Broker（代理）和Result backend（结果后端）两个组件组成。Broker负责存储执行的命令。Result backend存储完成执行命令的状态信息。|Redis或RabbitMQ |<br>|一个Airflow Web服务器| WebServer | 提供web端服务，以及会定时生成子进程去扫描对应的目录下的dags，并更新数据库| |    </p>
+<p>![架构图] (<a target="_blank" rel="noopener" href="https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70">https://img-blog.csdnimg.cn/20191206183249506.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dhbmd5aHd5aDc1Mw==,size_16,color_FFFFFF,t_70</a>)</p>
+<p>各种组件之间的通信<br>[1] Web server –&gt; Workers ： 获取任务执行日志。<br>[2] Web server –&gt; DAG files ： 展示DAG结构。<br>[3] Web server –&gt; Database ：获取任务状态。<br>[4] Workers –&gt; DAG files ：展示DAG结构和执行任务。<br>[5] Workers –&gt; Database ： 获取和存储连接配置信息、变量XCOM。<br>[6] Workers –&gt; Celery’s result backend ： 存储任务执行信息。<br>[7] Workers –&gt; Celery’s broker ：存储执行的命令。<br>[8] Scheduler –&gt; Database ： 存储DAG运行信息和相关的任务。<br>[9] Scheduler –&gt; DAG files ： 展示DAG的结构和执行任务。<br>[10] Scheduler –&gt; Celery’s result backend ： 获取已经执行完的任务信息。<br>[11] Scheduler –&gt; Celery’s broker ： 把执行的命令发送给Celery’s broker。</p>
+<p>1.2.2  单机模式和分布式模式的区别<br>Worker的具体实现由配置文件中的executor来指定，airflow支持多种Executor:</p>
+<ul>
+<li>SequentialExecutor: 单进程顺序执行，一般只用来测试</li>
+<li>LocalExecutor: 本地多进程执行</li>
+<li>CeleryExecutor: 使用Celery进行分布式任务调度</li>
+<li>DaskExecutor：使用Dask进行分布式任务调度</li>
+<li>KubernetesExecutor: 1.10.0新增, 创建临时POD执行每次任务<br>其中常用的是CeleryExecutor 和 KubernetesExecutor。 这里介绍下LocalExecutor 和 CeleryExecutor 分别代表单机和分布式模式。</li>
+</ul>
+<p>分布式模式</p>
+<ol>
+<li><p>Schedual读取配置文件 将Job信息发给RabbitMQ， 并在数据库里注册Job信息</p>
+</li>
+<li><p>RabbitMQ里有很多channel， schedual根据Job信息 发到对应的channel</p>
+</li>
+<li><p>Executor会被配置为 Celery Executor（在 airflow.cfg 中配置），并且指向 RabbitMQ Broker， 消费RabbitMQ对应的channel。</p>
+</li>
+<li><p>Worker 被安装在不同的节点上，它们从 RabbitMQ Broker 中读取任务，并执行，最终将结果写入数据库。</p>
+</li>
+<li><p>Web读取MySQL里面的Job信息，展示Job的执行结果</p>
+</li>
+</ol>
+<p>单机模式</p>
+<h2 id="1-3-核心概念"><a href="#1-3-核心概念" class="headerlink" title="1.3  核心概念"></a>1.3  核心概念</h2><p>1.3.1 DAG 图</p>
+<p>即有向无环图(Directed Acyclic Graph)，将所有需要运行的tasks按照依赖关系组织起来, 描述的是一个工作流的过程。</p>
+<p>DAG 不关心里面的任务做了什么事情，而是关心</p>
+<ul>
+<li>任务在特定的时间开始</li>
+<li>若干任务以正确的顺序进行</li>
+<li>对未期望的情况有正确的处理</li>
+</ul>
+<p>1.3.2 Operators<br>DAG定义了一个工作流，operators定义了工作流中的每一task具体做什么事情。一个operator定义工作流中一个task，每个operator是独立执行的，不需要和其他的operator共享信息。它们可以分别在不同的机器上执行。</p>
+<p>如果你真的需要在两个operator之间共享信息，可以使用airflow提供的Xcom功能。</p>
+<p>1.3.3 Tasks<br>Task为DAG中具体的作业任务，依赖于DAG，也就是必须存在于某个DAG中。</p>
+<p>Task在DAG中可以配置依赖关系（当然也可以配置跨DAG依赖，但是并不推荐。跨DAG依赖会导致DAG图的直观性降低，并给依赖管理带来麻烦）。</p>
+<p>1.3.4 Hooks<br>建立一个与外部数据系统之间的连接，比如Mysql，HDFS，本地文件系统(文件系统也被认为是外部系统)等，通过拓展Hook能够接入任意的外部系统的接口进行连接，这样就解决的外部系统依赖问题。</p>
+<p>1.3  优缺点<br>优点</p>
+<p>缺点：</p>
+<ol>
+<li>分布式部署麻烦</li>
+<li>task拆分得很细，这样的话，如果某个task失败，重跑的代价会比较低。但是，tasks太多时，airflow在调度tasks会很低效，airflow一直处于选择待执行的task的过程中，会长时间没有具体task在执行，从而整体执行效率大幅降低。</li>
+</ol>
+<h2 id="1-4-竞品比较"><a href="#1-4-竞品比较" class="headerlink" title="1.4 竞品比较"></a>1.4 竞品比较</h2><p>Apache Airflow<br>LinkedIn Azkaban<br>Apache Oozie</p>
 
     </div>
 
@@ -264,7 +307,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/paging-algorithms/" rel="tag"># paging algorithms</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%B0%83%E5%BA%A6/" rel="tag"># 分布式调度</a>
           </div>
 
         
@@ -272,11 +315,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/10/05/distributed-system-rpc/" rel="next" title="RPC and Threads">
-      RPC and Threads <i class="fa fa-chevron-right"></i>
+    <a href="/2020/10/05/distributed-system-GFS/" rel="prev" title="GFS">
+      <i class="fa fa-chevron-left"></i> GFS
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -335,7 +378,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IO-and-cache-efficient-algorithm"><span class="nav-number">1.</span> <span class="nav-text">IO and cache-efficient algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#paging-algorithms"><span class="nav-number">2.</span> <span class="nav-text">paging algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83blog"><span class="nav-number">3.</span> <span class="nav-text">参考blog</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#airflow%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">airflow简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 干嘛的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 整体架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.</span> <span class="nav-text">1.3  核心概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E7%AB%9E%E5%93%81%E6%AF%94%E8%BE%83"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 竞品比较</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
