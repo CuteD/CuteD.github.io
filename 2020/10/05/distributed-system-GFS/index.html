@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"delia.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="论文导读论文:《The Google File System》关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance">
+  <meta name="description" content="关键词论文:《The Google File System》关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GFS">
 <meta property="og:url" content="http://delia.github.io/child/2020/10/05/distributed-system-GFS/index.html">
 <meta property="og:site_name" content="Delia&#39;s Blog">
-<meta property="og:description" content="论文导读论文:《The Google File System》关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance">
+<meta property="og:description" content="关键词论文:《The Google File System》关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-05T05:18:24.000Z">
-<meta property="article:modified_time" content="2020-12-12T09:26:07.000Z">
+<meta property="article:modified_time" content="2020-12-12T12:16:20.000Z">
 <meta property="article:author" content="丁大锤">
 <meta property="article:tag" content="Google文件系统">
 <meta name="twitter:card" content="summary">
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-12-12 17:26:07" itemprop="dateModified" datetime="2020-12-12T17:26:07+08:00">2020-12-12</time>
+                <time title="Modified: 2020-12-12 20:16:20" itemprop="dateModified" datetime="2020-12-12T20:16:20+08:00">2020-12-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,10 +246,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
+        <h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
 <a id="more"></a>
 
-<h2 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h2><ol>
+<h1 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h1><ol>
 <li>系统由很多廉价的组件构成，并且组件会经常失败， 因此要注意持续的监控 、错误侦测、灾难冗余、 自动恢复</li>
 <li>系统存储量大，支持GB级的大文件，因此需要考虑IO操作和block设计的大小</li>
 <li>既要支持大规模的流式读取，也要支持小规模的随机读取。 为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读</li>
@@ -257,8 +257,8 @@
 <li>必须高效的支持多个用户同时写一个文件，通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写</li>
 <li>高性能的稳定网络带宽远比低延迟重要</li>
 </ol>
-<h2 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h2><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
-<h3 id="master"><a href="#master" class="headerlink" title="master"></a>master</h3><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：</p>
+<h1 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h1><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
+<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：</p>
 <ul>
 <li>Step1 客户端根据文件名和字节偏移生成chunk index</li>
 <li>Step2 客户端把chunk index 和 文件名 发送给master</li>
@@ -266,8 +266,7 @@
 <li>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)</li>
 <li>Step5 客户端会向最近的一个副本请求数据</li>
 </ul>
-<p>写流程：</p>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h3><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：</p>
+<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h2><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：</p>
 <ol>
 <li>减少客服端和主节点的直接交互</li>
 <li>通过tcp长连接来减少网络IO</li>
@@ -278,31 +277,37 @@
 <li>当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题</li>
 <li>批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</li>
 </ol>
-<h3 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h3><p>master服务器存储3种类型的元数据：</p>
+<h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><p>master服务器存储3种类型的元数据：</p>
 <ol>
 <li>文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本</li>
 <li>文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本</li>
 <li>块副本的存储位置, master内存</li>
 </ol>
-<p>一、内存数据结构<br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p>
-<p>二、chunk位置<br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p>
-<p>三、操作日志<br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p>
-<h3 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h3><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b) 通过chunk版本号来去掉过时的chunk<br>GFS通过master和chunkservers的定期handshake来检测破坏了的数据</p>
+<p><strong>内存数据结构</strong><br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p>
+<p><strong>chunk位置</strong><br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p>
+<p><strong>操作日志</strong><br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p>
+<h1 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h1><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b) 通过chunk版本号来去掉过时的chunk<br>GFS通过master和chunkservers的定期handshake来检测破坏了的数据</p>
 <p>二、应用实现<br>GFS采用几个简单的技术来保证它的一致性： 追加写、checkpoint、自验证、自识别？？<br>当很多用户同时追加写到一个文件的时候：每条写入的记录可以通过checksum来验证有效性</p>
-<h2 id="系统交互"><a href="#系统交互" class="headerlink" title="系统交互"></a>系统交互</h2><h3 id=""><a href="#" class="headerlink" title=""></a></h3><h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p>
+<h1 id="系统交互"><a href="#系统交互" class="headerlink" title="系统交互"></a>系统交互</h1><h2 id="租约"><a href="#租约" class="headerlink" title="租约"></a>租约</h2><h2 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h2><h2 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h2><h2 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h2><h1 id="master-操作"><a href="#master-操作" class="headerlink" title="master 操作"></a>master 操作</h1><p>master执行所有的namespace的操作，还有chunk的位置选址、备份、完整性、平衡负载等任务。  </p>
+<h2 id="命名空间管理"><a href="#命名空间管理" class="headerlink" title="命名空间管理"></a>命名空间管理</h2><h2 id="副本选择"><a href="#副本选择" class="headerlink" title="副本选择"></a>副本选择</h2><h2 id="重备份"><a href="#重备份" class="headerlink" title="重备份"></a>重备份</h2><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><h2 id="过期副本删除"><a href="#过期副本删除" class="headerlink" title="过期副本删除"></a>过期副本删除</h2><p>#容错和诊断</p>
+<h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>高可用性靠两点来保证: 备份与恢复</p>
+<ol>
+<li>快速恢复<br>reconnect and  restart  </li>
+<li>chunk 备份<br>不同机架上都有chunkserver的副本<br>master通过checksum来删除损坏的副本<br>后续可以讨论避免冗余存储  </li>
+<li>master 备份<br>master上的operation log和checkpoints是备份的<h2 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h2>每一个chunkserver上必须独立的效验自己的副本的完整性，通过checksum来检查<br>checksum存储在内存和磁盘上<br>读数据时会校验，写数据时更新checksum, chunkserver空闲时，会检查不常用的副本</li>
+</ol>
+<ul>
+<li>chunckserver返回数据前，会做checksum, 如果checksum不正确， 返回错误;</li>
+<li>会从其它副本重新读取数据, 并且master安排其它副本克隆;</li>
+<li>新副本克隆;</li>
+<li>master指挥老server删除错误副本</li>
+</ul>
+<p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p>
 <p>3、Bad replication Design</p>
 <p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p>
 <p>MASTER DATA：<br>表1：filename 到 chunk handles的映射  （会写入磁盘）<br>表2： chunk handle 到 chunk server的列表  （不必写入磁盘，master重启后会和server通信）<br>版本、 过期时间、</p>
 <p>读数据：<br>1、文件名+偏移量  发送给master<br>2、master获取handle和servers列表给客户端<br>3、客户端和chunk sever通信，发送文件名和偏移量</p>
 <p>写数据：<br>1、没有primary的情况<br>找出primary和sencondery<br>中心副本控制协议： Primary-secondary协议<br>分布式共识协议 </p>
-<p>2、primary告诉所有的p 和 s 追加写<br>如果所有的s 都回复 “yes”, p 回复 client “success”<br>else p回复client “Fail”, 客户端重新发起追加写</p>
-<p>最小化跨越交换机的处理：client只把数据发到离他最近的副本  然后副本再发送到其它副本  直到所有副本都拿到</p>
-<p>Q：如果master认为priamry挂了怎么办？<br>租约  lease<br>master在指定一个primary的时候会建议一个租约，只在一定时间内，这个chunk是primary，租约到期后，primary就会停止执行master的请求</p>
-<p>Q：SPILT BRAIN(脑裂) : 有两个primary处理请求并且不知道彼此错误的情况，通常是由网络引起的，net partition</p>
-<p>Q：为什么指定一个新的primary是bad?<br>1、client会在短时间内缓存primary的信息<br>2、如果在修改primary的同时，有client的请求过来，会得到两个相互冲突的副本。</p>
-<p>Q：如果有一个文件，但是没有副本 怎么处理？<br>master发现没有chunk和文件关联，就会创建一个新的chunk标识符，再指定一个primary和一些secondaries为这个chunk服务</p>
-<p>Q: 如何将GFS升级成强一致性的系统<br>1、需要检测重复的能力<br>2、sencondary必须能工作，一旦如果磁盘损坏，它需要移除系统<br>3、两阶段提交<br>4、sencondary容易接收到过时的指令，所以可以为sencondary建立一个lease</p>
-<p>GFS最大的问题是 它只用了一个master，需要记录所有的chunk条目，所以主机内存受限。<br>如果主机宕机的话，需要人工介入来切换master</p>
 
     </div>
 
@@ -320,13 +325,10 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/10/05/distributed-system-primary-backup/" rel="prev" title="Primary-Backup Replication">
-      <i class="fa fa-chevron-left"></i> Primary-Backup Replication
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/12/12/airflow%E7%AE%80%E4%BB%8B/" rel="next" title="airflow简介">
-      airflow简介 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/10/05/distributed-system-primary-backup/" rel="next" title="Primary-Backup Replication">
+      Primary-Backup Replication <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -386,7 +388,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.</span> <span class="nav-text">论文导读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">分布式存储的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GFS%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">GFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#master"><span class="nav-number">1.2.1.</span> <span class="nav-text">master</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.3.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#chunk-server"><span class="nav-number">1.3.1.</span> <span class="nav-text">chunk server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metadata"><span class="nav-number">1.3.2.</span> <span class="nav-text">Metadata</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Consistency-Model"><span class="nav-number">1.3.3.</span> <span class="nav-text">Consistency Model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BA%A4%E4%BA%92"><span class="nav-number">1.4.</span> <span class="nav-text">系统交互</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.4.1.</span> <span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">课程内容</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">1.</span> <span class="nav-text">关键词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">分布式存储的背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFS%E6%9E%B6%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">GFS架构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E6%B5%81%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">读流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E6%B5%81%E7%A8%8B"><span class="nav-number">3.2.</span> <span class="nav-text">写流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">4.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chunk-server"><span class="nav-number">4.1.</span> <span class="nav-text">chunk server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Metadata"><span class="nav-number">4.2.</span> <span class="nav-text">Metadata</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Consistency-Model"><span class="nav-number">5.</span> <span class="nav-text">Consistency Model</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%BA%A4%E4%BA%92"><span class="nav-number">6.</span> <span class="nav-text">系统交互</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%9F%E7%BA%A6"><span class="nav-number">6.1.</span> <span class="nav-text">租约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="nav-number">6.2.</span> <span class="nav-text">数据流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-number">6.3.</span> <span class="nav-text">原子操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7"><span class="nav-number">6.4.</span> <span class="nav-text">快照</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#master-%E6%93%8D%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">master 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E7%AE%A1%E7%90%86"><span class="nav-number">7.1.</span> <span class="nav-text">命名空间管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%AF%E6%9C%AC%E9%80%89%E6%8B%A9"><span class="nav-number">7.2.</span> <span class="nav-text">副本选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%A4%87%E4%BB%BD"><span class="nav-number">7.3.</span> <span class="nav-text">重备份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="nav-number">7.4.</span> <span class="nav-text">垃圾回收</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E5%89%AF%E6%9C%AC%E5%88%A0%E9%99%A4"><span class="nav-number">7.5.</span> <span class="nav-text">过期副本删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">7.6.</span> <span class="nav-text">高可用性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7"><span class="nav-number">7.7.</span> <span class="nav-text">数据完整性</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
