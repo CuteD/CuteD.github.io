@@ -158,6 +158,95 @@
       </tags>
   </entry>
   <entry>
+    <title>GFS</title>
+    <url>/2020/10/05/distributed-system-GFS/</url>
+    <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
+<a id="more"></a>
+
+<h1 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h1><ol>
+<li>系统由很多廉价的组件构成，并且组件会经常失败， 因此要注意持续的监控 、错误侦测、灾难冗余、 自动恢复</li>
+<li>系统存储量大，支持GB级的大文件，因此需要考虑IO操作和block设计的大小</li>
+<li>既要支持大规模的流式读取，也要支持小规模的随机读取。 为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读</li>
+<li>支持大规模顺序追加写，对于小规模的随机写，性能不咋滴</li>
+<li>必须高效的支持多个用户同时写一个文件，通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写</li>
+<li>高性能的稳定网络带宽远比低延迟重要</li>
+</ol>
+<h1 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h1><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
+<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：</p>
+<ul>
+<li>Step1 客户端根据文件名和字节偏移生成chunk index</li>
+<li>Step2 客户端把chunk index 和 文件名 发送给master</li>
+<li>Step3 master返回对应的chunk handle 和 副本的位置</li>
+<li>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)</li>
+<li>Step5 客户端会向最近的一个副本请求数据</li>
+</ul>
+<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h2><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：</p>
+<ol>
+<li>减少客服端和主节点的直接交互</li>
+<li>通过tcp长连接来减少网络IO</li>
+<li>减少了存储在主节点上的元数据</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题</li>
+<li>批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</li>
+</ol>
+<h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><p>master服务器存储3种类型的元数据：</p>
+<ol>
+<li>文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本</li>
+<li>文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本</li>
+<li>块副本的存储位置, master内存</li>
+</ol>
+<p><strong>内存数据结构</strong><br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p>
+<p><strong>chunk位置</strong><br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p>
+<p><strong>操作日志</strong><br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p>
+<h1 id="一致性模型"><a href="#一致性模型" class="headerlink" title="一致性模型"></a>一致性模型</h1><p><strong>一致性保障机制</strong><br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b) 通过chunk版本号来去掉过时的chunk<br>GFS通过master和chunkservers的定期handshake来检测破坏了的数据</p>
+<p>二、应用实现<br>GFS采用几个简单的技术来保证它的一致性： 追加写、checkpoint、自验证、自识别？？<br>当很多用户同时追加写到一个文件的时候：每条写入的记录可以通过checksum来验证有效性</p>
+<h1 id="系统交互"><a href="#系统交互" class="headerlink" title="系统交互"></a>系统交互</h1><h2 id="租约"><a href="#租约" class="headerlink" title="租约"></a>租约</h2><h2 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h2><h2 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h2><h2 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h2><h1 id="master-操作"><a href="#master-操作" class="headerlink" title="master 操作"></a>master 操作</h1><p>master执行所有的namespace的操作，还有chunk的位置选址、备份、完整性、平衡负载等任务。  </p>
+<h2 id="命名空间管理"><a href="#命名空间管理" class="headerlink" title="命名空间管理"></a>命名空间管理</h2><p>由于master的操作比较重，会消耗很长的时间， 因此每一个namespace的节点都有都有一个相关的读写锁, 来保证操作的序列化。</p>
+<ul>
+<li>目录 –&gt; 读锁 –&gt; 防止被删除、改名、快照</li>
+<li>文件 –&gt; 死锁 –&gt; 防止同名文件</li>
+<li>读写锁 惰性分配 防止死锁<h2 id="副本选择"><a href="#副本选择" class="headerlink" title="副本选择"></a>副本选择</h2>副本选址有两个原则：</li>
+<li>最大限度的保证数据的可靠和可用</li>
+<li>最大限度的利用网络带宽<br>因此机器之间会复制，机架之间也会复制。<h2 id="重备份"><a href="#重备份" class="headerlink" title="重备份"></a>重备份</h2>有三个原因需要创建chunk的副本：chunk的创建，chunk的重新复制，chunk的重新均衡。<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><h2 id="过期副本删除"><a href="#过期副本删除" class="headerlink" title="过期副本删除"></a>过期副本删除</h2></li>
+</ul>
+<p>#容错和诊断</p>
+<h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>高可用性靠两点来保证: 备份与恢复<br><strong>1. 快速恢复</strong><br>reconnect and  restart<br><strong>2. chunk 备份</strong><br>不同机架上都有chunkserver的副本<br>master通过checksum来删除损坏的副本<br>后续可以讨论避免冗余存储<br><strong>3. master 备份</strong><br>master上的operation log和checkpoints是备份的</p>
+<h2 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h2><p>每一个chunkserver上必须独立的效验自己的副本的完整性，通过checksum来检查<br>checksum存储在内存和磁盘上<br>读数据时会校验，写数据时更新checksum, chunkserver空闲时，会检查不常用的副本</p>
+<ul>
+<li>chunckserver返回数据前，会做checksum, 如果checksum不正确， 返回错误;</li>
+<li>会从其它副本重新读取数据, 并且master安排其它副本克隆;</li>
+<li>新副本克隆;</li>
+<li>master指挥老server删除错误副本</li>
+</ul>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>Google文件系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Primary-Backup Replication</title>
+    <url>/2020/10/05/distributed-system-primary-backup/</url>
+    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
+<a id="more"></a>
+
+
+<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>主从备份</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RPC and Threads</title>
     <url>/2020/10/05/distributed-system-rpc/</url>
     <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
@@ -201,97 +290,6 @@
       </categories>
       <tags>
         <tag>paging algorithms</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Primary-Backup Replication</title>
-    <url>/2020/10/05/distributed-system-primary-backup/</url>
-    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
-<a id="more"></a>
-
-
-<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>主从备份</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>GFS</title>
-    <url>/2020/10/05/distributed-system-GFS/</url>
-    <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
-<a id="more"></a>
-
-<h1 id="分布式存储的背景"><a href="#分布式存储的背景" class="headerlink" title="分布式存储的背景"></a>分布式存储的背景</h1><ol>
-<li>系统由很多廉价的组件构成，并且组件会经常失败， 因此要注意持续的监控 、错误侦测、灾难冗余、 自动恢复</li>
-<li>系统存储量大，支持GB级的大文件，因此需要考虑IO操作和block设计的大小</li>
-<li>既要支持大规模的流式读取，也要支持小规模的随机读取。 为了提高性能，可以把小规模随机读操作进行合并，变成批量顺序读</li>
-<li>支持大规模顺序追加写，对于小规模的随机写，性能不咋滴</li>
-<li>必须高效的支持多个用户同时写一个文件，通过协同设计来满足灵活性，减轻了GFS一致性的要求； 引进了原子性的追加写</li>
-<li>高性能的稳定网络带宽远比低延迟重要</li>
-</ol>
-<h1 id="GFS架构"><a href="#GFS架构" class="headerlink" title="GFS架构"></a>GFS架构</h1><p>GFS: 一个GFS集群是由一个master、多个chunkservers构成，支持多个客服端访问。</p>
-<h2 id="读流程"><a href="#读流程" class="headerlink" title="读流程"></a>读流程</h2><p>因为master节点只有一个，所以要减少它的读写，避免master成为瓶颈。因此客户端和Master节点的通信只获取元数据，所有的数据操作都是由客户端直接和Chunk服务器进行交互的<br>读流程：</p>
-<ul>
-<li>Step1 客户端根据文件名和字节偏移生成chunk index</li>
-<li>Step2 客户端把chunk index 和 文件名 发送给master</li>
-<li>Step3 master返回对应的chunk handle 和 副本的位置</li>
-<li>Step4 客户端会以文件名和chunk index 来缓存信息 (chunk handle 和 副本)</li>
-<li>Step5 客户端会向最近的一个副本请求数据</li>
-</ul>
-<h2 id="写流程"><a href="#写流程" class="headerlink" title="写流程"></a>写流程</h2><h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><h2 id="chunk-server"><a href="#chunk-server" class="headerlink" title="chunk server"></a>chunk server</h2><p>chunk size的大小直接影响系统的吞吐指标，chunk size越大越能利用磁盘的顺序读能力<br>一个chunk一般选用64MB（一般文件系统的块大小是4K），采用惰性空间分配防止内存碎片造成空间浪费？？？<br>优点：</p>
-<ol>
-<li>减少客服端和主节点的直接交互</li>
-<li>通过tcp长连接来减少网络IO</li>
-<li>减少了存储在主节点上的元数据</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>当大量客户端访问相同文件，容易产生热点问题。但由于缓存和顺序读，不会是大问题</li>
-<li>批处理队列系统里，还是会出现热点问题( 没看懂)，短期解决办法:多复制几份、错开程序的启动时间，长期解决办法：允许从其它客服端读取</li>
-</ol>
-<h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><p>master服务器存储3种类型的元数据：</p>
-<ol>
-<li>文件和块的命名空间, master内存 &amp;&amp; master磁盘 &amp;&amp; chunk 副本</li>
-<li>文件到块的映射关系,  master内存 &amp;&amp;  master磁盘 &amp;&amp; chunk 副本</li>
-<li>块副本的存储位置, master内存</li>
-</ol>
-<p><strong>内存数据结构</strong><br>master会定期扫描，用来实现chunk的垃圾回收、chunkserver失败时候的副本复制、以及平衡负载的chunk迁移？<br>一个问题是系统受限于master的内存，但不严重因为一个chunk的meta不足64kb，文件名也是以压缩的方式存储</p>
-<p><strong>chunk位置</strong><br>为了解决master和chunkserver的同步问题，块位置缓存在内存不落盘，master启动时通过请求chunkserver获取位置信息，通过心跳来监控chunkserver的状态。</p>
-<p><strong>操作日志</strong><br>为了确保操作日志的完整性，只有日志写到本地以及远程磁盘后，才会响应客户端操作。<br>1、master在操作日志量级达到一定程度时，会创建一个checkpoint文件，写入本地和远程的硬盘；<br>2、为了保证checkpoint文件不阻塞服务，会用独立线程切换到新的线程和checkpoint文件<br>3、master进行灾难恢复的时候，只需要恢复checkpoint和后面的日志文件。历史可以删除</p>
-<h1 id="Consistency-Model"><a href="#Consistency-Model" class="headerlink" title="Consistency Model"></a>Consistency Model</h1><p>一、一致性保障机制<br>命名空间锁保证了原子性和正确性，操作日志保证了保证了顺序。<br>a) 对Chunk的所有副本的修改操作顺序一致<br>b) 通过chunk版本号来去掉过时的chunk<br>GFS通过master和chunkservers的定期handshake来检测破坏了的数据</p>
-<p>二、应用实现<br>GFS采用几个简单的技术来保证它的一致性： 追加写、checkpoint、自验证、自识别？？<br>当很多用户同时追加写到一个文件的时候：每条写入的记录可以通过checksum来验证有效性</p>
-<h1 id="系统交互"><a href="#系统交互" class="headerlink" title="系统交互"></a>系统交互</h1><h2 id="租约"><a href="#租约" class="headerlink" title="租约"></a>租约</h2><h2 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h2><h2 id="原子操作"><a href="#原子操作" class="headerlink" title="原子操作"></a>原子操作</h2><h2 id="快照"><a href="#快照" class="headerlink" title="快照"></a>快照</h2><h1 id="master-操作"><a href="#master-操作" class="headerlink" title="master 操作"></a>master 操作</h1><p>master执行所有的namespace的操作，还有chunk的位置选址、备份、完整性、平衡负载等任务。  </p>
-<h2 id="命名空间管理"><a href="#命名空间管理" class="headerlink" title="命名空间管理"></a>命名空间管理</h2><h2 id="副本选择"><a href="#副本选择" class="headerlink" title="副本选择"></a>副本选择</h2><h2 id="重备份"><a href="#重备份" class="headerlink" title="重备份"></a>重备份</h2><h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><h2 id="过期副本删除"><a href="#过期副本删除" class="headerlink" title="过期副本删除"></a>过期副本删除</h2><p>#容错和诊断</p>
-<h2 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h2><p>高可用性靠两点来保证: 备份与恢复</p>
-<ol>
-<li>快速恢复<br>reconnect and  restart  </li>
-<li>chunk 备份<br>不同机架上都有chunkserver的副本<br>master通过checksum来删除损坏的副本<br>后续可以讨论避免冗余存储  </li>
-<li>master 备份<br>master上的operation log和checkpoints是备份的<h2 id="数据完整性"><a href="#数据完整性" class="headerlink" title="数据完整性"></a>数据完整性</h2>每一个chunkserver上必须独立的效验自己的副本的完整性，通过checksum来检查<br>checksum存储在内存和磁盘上<br>读数据时会校验，写数据时更新checksum, chunkserver空闲时，会检查不常用的副本</li>
-</ol>
-<ul>
-<li>chunckserver返回数据前，会做checksum, 如果checksum不正确， 返回错误;</li>
-<li>会从其它副本重新读取数据, 并且master安排其它副本克隆;</li>
-<li>新副本克隆;</li>
-<li>master指挥老server删除错误副本</li>
-</ul>
-<p>难点：<br>1、性能： SHARDING (分片)<br>2、容错： TOLERANCE -&gt; REPLICATION（副本） -&gt; INCONSISTENCY (副本不一致的问题) -&gt; Low Performance （需要通信来解决副本不一致， 低性能）<br>3、Automatic Recoverry</p>
-<p>3、Bad replication Design</p>
-<p>GFS介绍<br>只处理大文件的顺序访问，而不是随机访问</p>
-<p>MASTER DATA：<br>表1：filename 到 chunk handles的映射  （会写入磁盘）<br>表2： chunk handle 到 chunk server的列表  （不必写入磁盘，master重启后会和server通信）<br>版本、 过期时间、</p>
-<p>读数据：<br>1、文件名+偏移量  发送给master<br>2、master获取handle和servers列表给客户端<br>3、客户端和chunk sever通信，发送文件名和偏移量</p>
-<p>写数据：<br>1、没有primary的情况<br>找出primary和sencondery<br>中心副本控制协议： Primary-secondary协议<br>分布式共识协议 </p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>Google文件系统</tag>
       </tags>
   </entry>
 </search>
