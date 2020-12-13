@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>GFS</title>
+    <title>Raft</title>
     <url>/2020/12/13/Raft/</url>
     <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《Resilient Distributed Datasets: A Fault-Tolerant Abstraction forIn-Memory Cluster Computing》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
 <a id="more"></a>]]></content>
@@ -10,11 +10,11 @@
         <category>分布式系统</category>
       </categories>
       <tags>
-        <tag>Google文件系统</tag>
+        <tag>分布式计算</tag>
       </tags>
   </entry>
   <entry>
-    <title>GFS</title>
+    <title>Spark</title>
     <url>/2020/12/13/spark/</url>
     <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《Resilient Distributed Datasets: A Fault-Tolerant Abstraction forIn-Memory Cluster Computing》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
 <a id="more"></a>]]></content>
@@ -23,11 +23,11 @@
         <category>分布式系统</category>
       </categories>
       <tags>
-        <tag>Google文件系统</tag>
+        <tag>分布式计算</tag>
       </tags>
   </entry>
   <entry>
-    <title>GFS</title>
+    <title>MapReduce</title>
     <url>/2020/12/13/MapReduce/</url>
     <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
 <a id="more"></a>]]></content>
@@ -36,7 +36,7 @@
         <category>分布式系统</category>
       </categories>
       <tags>
-        <tag>Google文件系统</tag>
+        <tag>分布式计算</tag>
       </tags>
   </entry>
   <entry>
@@ -312,7 +312,7 @@
         <category>分布式系统</category>
       </categories>
       <tags>
-        <tag>Google文件系统</tag>
+        <tag>分布式存储</tag>
       </tags>
   </entry>
   <entry>
