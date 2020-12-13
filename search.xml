@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>GFS</title>
+    <url>/2020/12/13/Raft/</url>
+    <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《Resilient Distributed Datasets: A Fault-Tolerant Abstraction forIn-Memory Cluster Computing》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>Google文件系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GFS</title>
+    <url>/2020/12/13/spark/</url>
+    <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《Resilient Distributed Datasets: A Fault-Tolerant Abstraction forIn-Memory Cluster Computing》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>Google文件系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>GFS</title>
+    <url>/2020/12/13/MapReduce/</url>
+    <content><![CDATA[<h1 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h1><p>论文:《The Google File System》<br>关键词：1、data-intensive  2、fault tolerance  3、high aggregate performance </p>
+<a id="more"></a>]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>Google文件系统</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>airflow部署</title>
     <url>/2020/12/12/airflow%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<h1 id="搭建airflow"><a href="#搭建airflow" class="headerlink" title="搭建airflow"></a>搭建airflow</h1><p><a href="https://airflow.apache.org/docs/stable/installation.html">官方文档</a></p>
@@ -277,6 +316,23 @@
       </tags>
   </entry>
   <entry>
+    <title>Primary-Backup Replication</title>
+    <url>/2020/10/05/distributed-system-primary-backup/</url>
+    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
+<a id="more"></a>
+
+
+<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>分布式系统</category>
+      </categories>
+      <tags>
+        <tag>主从备份</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RPC and Threads</title>
     <url>/2020/10/05/distributed-system-rpc/</url>
     <content><![CDATA[<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><p>多线程协同 垃圾回收<br>1、多线程<br>goroutine</p>
@@ -293,23 +349,6 @@
       </categories>
       <tags>
         <tag>rpc和线程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Primary-Backup Replication</title>
-    <url>/2020/10/05/distributed-system-primary-backup/</url>
-    <content><![CDATA[<h1 id="论文导读"><a href="#论文导读" class="headerlink" title="论文导读"></a>论文导读</h1><p>论文：《actical System for Practical System forFault-Tolerant Virtual Machines<br>Fault-Tolerant Virtual Machines》</p>
-<a id="more"></a>
-
-
-<h1 id="课程内容"><a href="#课程内容" class="headerlink" title="课程内容"></a>课程内容</h1><p>1、state transfer (状态转移)<br>primary将整个ram都备份， 是转移内存<br>2、replicated state machine (备份状态机) 主<br>转移 operation。相同的状态、相同的启动就会有相同的输出。</p>
-]]></content>
-      <categories>
-        <category>学习</category>
-        <category>分布式系统</category>
-      </categories>
-      <tags>
-        <tag>主从备份</tag>
       </tags>
   </entry>
   <entry>
