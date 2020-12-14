@@ -18,12 +18,15 @@
     <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>传统通信方式</p>
 <ul>
 <li>进程间通信<br>问题: 不同语言间无法通信、多进程同时通信时顺序问题</li>
-<li>机器间通信<br>可以通过网络、RPC等进行通信<br>问题:<ol>
+<li>机器间通信<br>可以通过网络、RPC等进行通信<a id="more"></a>
+
+</li>
+</ul>
+<p>问题:</p>
+<ol>
 <li>如果集群需要扩容或者其他IP变更、接口变更、维护代驾高；  </li>
 <li>容错处理：宕机、网络问题等</li>
 </ol>
-</li>
-</ul>
 <h1 id="消息队列介绍"><a href="#消息队列介绍" class="headerlink" title="消息队列介绍"></a>消息队列介绍</h1><ul>
 <li>消息<br>自定义结构， JSON、二进制等;<br>一般使用时，会自定义header、type、body等  </li>
 <li>队列<br>FIFO<br>能cache消息</li>
